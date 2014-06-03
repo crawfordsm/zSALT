@@ -2,7 +2,7 @@
 """
 SPECREDUCE
 
-Generdal data reduction script for SALT long slit data.
+General data reduction script for SALT long slit data.
 
 This includes step that are not yet included in the pipeline 
 and can be used for extended reductions of SALT data. 
@@ -43,7 +43,7 @@ from speccal import speccal
 from PySpectrograph.Spectra import findobj
 
 def specred(infiles, logprefix=None, imreduce=True, specreduce=True, flatfield=False, 
-            fringe=False, automethod='Matchlines', inter=True, 
+            fringe=False, automethod='Matchlines', inter=True, badpixelimage=None, lampdir="pysalt$data/linelists/",
             cleanup=True):
     """specred is a script to produce 2D-wavelength calibrated data 
        from  SALT longslit observations.  It includes steps not
@@ -108,7 +108,9 @@ def specred(infiles, logprefix=None, imreduce=True, specreduce=True, flatfield=F
  
     if imreduce:   
       #prepare the data
-      saltprepare(infiles, '', 'p', createvar=False, badpixelimage='', clobber=True, logfile=logfile, verbose=True)
+      createvar=True
+      if badpixelimage is None: createvar=False
+      saltprepare(infiles, '', 'p', createvar=createvar, badpixelimage=badpixelimage, clobber=True, logfile=logfile, verbose=True)
 
       #bias subtract the data
       saltbias('pP*fits', '', 'b', subover=True, trim=True, subbias=False, masterbias='',  
@@ -171,8 +173,7 @@ def specred(infiles, logprefix=None, imreduce=True, specreduce=True, flatfield=F
            if obs_dict['OBJECT'][i].upper().strip()=='ARC':
                lamp=obs_dict['LAMPID'][i].strip().replace(' ', '')
                arcimage='mfxgbp'+os.path.basename(infile_list[i])
-               lampfile=iraf.osfn("pysalt$data/linelists/%s.txt" % lamp)
-
+               lampfile=iraf.osfn("%s%s.txt" % (lampdir, lamp))
                specidentify(arcimage, lampfile, dbfile, guesstype='rss', 
                   guessfile='', automethod=automethod,  function='legendre',  order=3, 
                   rstep=100, rstart='middlerow', mdiff=10, thresh=2, niter=5, smooth=3,

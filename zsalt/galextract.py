@@ -25,7 +25,7 @@ from quickspec import clean_spectra
 
 from PySpectrograph.Spectra import findobj
 
-def galextract(imglist, findobj=None, normalize=True, calfile=None):
+def galextract(img, yc=None, dy=None, normalize=True, calfile=None):
 
     
     #set up some files that will be needed
@@ -34,23 +34,23 @@ def galextract(imglist, findobj=None, normalize=True, calfile=None):
 
     #create the spectra text files for all of our objects
     spec_list=[]
-    for img in imglist:
-       #skynormalize the data
-       if normalize:
-           specslitnormalize(img, 'n'+img, '', response=None, response_output=None, order=3, conv=1e-2, niter=20,
-                     startext=0, clobber=False,logfile='salt.log',verbose=True)
-       hdu=pyfits.open('n'+img)
-       target=hdu[0].header['OBJECT']
-       ofile='%s.%s_%i_%i.ltxt' % (target, extract_date(img), extract_number(img), yc)
+    #skynormalize the data
+    if normalize:
+       specslitnormalize(img, 'n'+img, '', response=None, response_output=None, order=3, conv=1e-2, niter=20,
+                     startext=0, clobber=True,logfile='salt.log',verbose=True)
 
-       spec_list.extend(extract_spectra(img, y1, y2, ofile, calfile=calfile, smooth=False, clobber=True))
-       if calfile is not None: 
+    hdu=pyfits.open('n'+img)
+    target=hdu[0].header['OBJECT']
+    ofile='%s.%s_%i_%i.ltxt' % (target, extract_date(img), extract_number(img), yc)
+
+    extract_spectra(hdu, yc, dy, ofile, smooth=False, grow=10, clobber=True)
+
+    if calfile is not None: 
            airmass=hdu[0].header['AIRMASS']
            exptime=hdu[0].header['EXPTIME']
            extfile=iraf.osfn("pysalt$data/site/suth_extinct.dat")
            speccal(ofile, ofile.replace("txt", "spec"), calfile, extfile, airmass, exptime, clobber=True, logfile='salt.log', verbose=True)
 
-    #combine the spectra if desired
  
 
 def speccombine(spec_list, sfile):
@@ -167,4 +167,4 @@ def findskysection(section, skysection=[800,900], skylimit=100):
 
 
 if __name__=='__main__':
-   galextract(sys.argv[1:], calfile='../../20140126/p2/EG21_20140126.cal')
+   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
