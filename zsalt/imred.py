@@ -34,7 +34,7 @@ from saltflat import saltflat
 from saltmosaic import saltmosaic
 from saltillum import saltillum
 
-def imred(infile_list, prodir, bpmfile=None, cleanup=True):
+def imred(infile_list, prodir, bpmfile=None, gaindb = None, cleanup=True):
 
     #get the name of the files
     infiles=','.join(['%s' % x for x in infile_list])
@@ -64,8 +64,10 @@ def imred(infile_list, prodir, bpmfile=None, cleanup=True):
 
     add_variance('bpP*fits', bpmfile)
 
-    #gain correct the data
-    saltgain('bpP*fits', '', 'g', usedb=False, mult=True, clobber=True, logfile=logfile, verbose=True)
+    #gain correct the data 
+    usedb = False
+    if gaindb: usedb = True
+    saltgain('bpP*fits', '', 'g', gaindb=gaindb, usedb=usedb, mult=True, clobber=True, logfile=logfile, verbose=True)
 
     #cross talk correct the data
     saltxtalk('gbpP*fits', '', 'x', xtalkfile = "", usedb=False, clobber=True, logfile=logfile, verbose=True)
