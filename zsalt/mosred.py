@@ -18,10 +18,11 @@ from iraf import pysalt
 
 from saltobslog import obslog
 
+from specslit import specslit
 from specidentify import specidentify
 from specrectify import specrectify
 
-def mosred(infile_list, slitmask,propcode=None, inter=True, automethod='Matchlines'):
+def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, automethod='Matchlines'):
 
     #set up the files
     infiles=','.join(['%s' % x for x in infile_list])
@@ -37,6 +38,10 @@ def mosred(infile_list, slitmask,propcode=None, inter=True, automethod='Matchlin
 
     #apply the mask to the data sets
     for i in range(len(infile_list)):
+        specslit(image=infile_list[i], outimage='', outpref='s', exttype='rsmt', slitfile='../../P001423N01.xml', 
+                 outputslitfile='', regprefix='ds_', sections=3, width=25.0, sigma=2.2, thres=6.0, order=1, padding=5, yoffset=dy, 
+                 inter=False, clobber=True, logfile=logfile, verbose=True)
+
         
     exit()
 
