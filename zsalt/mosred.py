@@ -18,11 +18,12 @@ from iraf import pysalt
 
 from saltobslog import obslog
 
+from specselfid import specselfid
 from specslit import specslit
 from specidentify import specidentify
 from specrectify import specrectify
 
-def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, automethod='Matchlines'):
+def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss', guessfile='', rstep=100, automethod='Matchlines'):
 
     #set up the files
     infiles=','.join(['%s' % x for x in infile_list])
@@ -42,20 +43,19 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, automethod='Ma
                  outputslitfile='', regprefix='ds_', sections=3, width=25.0, sigma=2.2, thres=6.0, order=1, padding=5, yoffset=dy, 
                  inter=False, clobber=True, logfile=logfile, verbose=True)
 
-        
-    exit()
-
     for i in range(len(infile_list)):
            if obs_dict['OBJECT'][i].upper().strip()=='ARC' and obs_dict['PROPID'][i].upper().strip()==propcode:
                lamp=obs_dict['LAMPID'][i].strip().replace(' ', '')
-               arcimage=os.path.basename(infile_list[i])
+               arcimage='s'+os.path.basename(infile_list[i])
                if lamp == 'NONE': lamp='CuAr'
-               lampfile=iraf.osfn("pysalt$data/linelists/%s.salt" % lamp)
+               lampfile=iraf.osfn("../../%s.salt" % lamp)
 
-               specidentify(arcimage, lampfile, dbfile, guesstype='rss',
-                  guessfile='', automethod=automethod,  function='legendre',  order=3,
-                  rstep=100, rstart='middlerow', mdiff=20, thresh=3, niter=5, smooth=3,
-                  inter=inter, clobber=True, logfile=logfile, verbose=True)
+               specselfid(arcimage, '', 'a', arcimage, 'middlerow', 3, clobber=True, logfile=logfile, verbose=True)
+
+               specidentify('a'+arcimage, lampfile, dbfile, guesstype=guesstype,
+                  guessfile=guessfile, automethod=automethod,  function='legendre',  order=3,
+                  rstep=rstep, rstart='middlerow', mdiff=20, thresh=3, niter=5, smooth=3,
+                  inter=False, clobber=True, logfile=logfile, verbose=True)
 
                #specrectify(arcimage, outimages='', outpref='x', solfile=dbfile, caltype='line',
                #    function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
@@ -64,17 +64,14 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, automethod='Ma
     objimages=''
     spec_list=[]
     for i in range(len(infile_list)):
-       if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS')  and obs_dict['PROPID'][i].upper().strip()==propcode:
+       if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS')  and \
+          obs_dict['PROPID'][i].upper().strip()==propcode and \
+          obs_dict['OBSMODE'][i].count('SPECTROSCOPY'):
           img = infile_list[i]
           ##rectify it
-          specrectify(img, outimages='', outpref='x', solfile=dbfile, caltype='line',
+          specselfid('s'+img, '', 'a', arcimage, 'middlerow', 3, clobber=True, logfile=logfile, verbose=True)
+          specrectify('as'+img, outimages='', outpref='x', solfile=dbfile, caltype='line',
             function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
             blank=0.0, clobber=True, logfile=logfile, verbose=True)
-
-
-  
-
-
-    
 
 

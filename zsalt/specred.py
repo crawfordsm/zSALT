@@ -39,7 +39,8 @@ def specred(infile_list, propcode=None, inter=True, automethod='Matchlines'):
                lamp=obs_dict['LAMPID'][i].strip().replace(' ', '')
                arcimage=os.path.basename(infile_list[i])
                if lamp == 'NONE': lamp='CuAr'
-               lampfile=iraf.osfn("pysalt$data/linelists/%s.salt" % lamp)
+               lampfile=iraf.osfn("pysalt$data/linelists/%s.wav" % lamp)
+               lampfile='/Users/crawford/research/kepler/Xe.salt' 
 
                specidentify(arcimage, lampfile, dbfile, guesstype='rss',
                   guessfile='', automethod=automethod,  function='legendre',  order=3,
