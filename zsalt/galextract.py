@@ -21,11 +21,10 @@ from specextract import extract, write_extract
 from specslitnormalize import specslitnormalize
 from specsens import specsens
 from speccal import speccal
-from quickspec import clean_spectra
 
 from PySpectrograph.Spectra import findobj
 
-def galextract(img, yc=None, dy=None, normalize=True, calfile=None):
+def galextract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True, specformat='ascii'):
 
     
     #set up some files that will be needed
@@ -42,8 +41,9 @@ def galextract(img, yc=None, dy=None, normalize=True, calfile=None):
     hdu=pyfits.open('n'+img)
     target=hdu[0].header['OBJECT']
     ofile='%s.%s_%i_%i.ltxt' % (target, extract_date(img), extract_number(img), yc)
+    #ofile = img.replace('fits', 'txt')
 
-    extract_spectra(hdu, yc, dy, ofile, smooth=False, grow=10, clobber=True)
+    extract_spectra(hdu, yc, dy, ofile, smooth=False, grow=10, clobber=True, specformat=specformat, convert=convert)
 
     if calfile is not None: 
            airmass=hdu[0].header['AIRMASS']
@@ -79,7 +79,7 @@ def speccombine(spec_list, sfile):
    fout.close()
 
 
-def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=False, maskzeros=False, cleanspectra=True, clobber=True):
+def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=False, maskzeros=False, convert=True,  cleanspectra=True, clobber=True, specformat='ascii'):
     """From an image, extract a spectra.   
 
     """
@@ -97,18 +97,83 @@ def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=Fa
     y1=yc-dy
     y2=yc+dy
 
-    sy1=y2+5.0*dy
-    sy2=sy1+10.0*dy
+    #sy1=y2-2*dy
+    #sy2=y2+2*dy
 
-    ap_list=extract(hdu, method='normal', section=[(y1,y2)], minsize=minsize, thresh=thresh, convert=True)
-    sk_list=extract(hdu, method='normal', section=[(sy1,sy2)], minsize=minsize, thresh=thresh, convert=True)
+    #sdata = 1.0 * data 
+    #y,x = np.indices(sdata.shape)
+    #for i in range(sdata.shape[1]):
+    #   mask=(hdu[3].data[:,i]==0)
+    #   mask[sy1:sy2] = 0
+    #   if mask.sum()>0:
+    #     sdata[y1:y2,i] = np.interp(y[y1:y2,i], y[:,i][mask], data[:,i][mask])  
+    #hdu[1].data = sdata
+    #sk_list=extract(hdu, method='normal', section=[(y1,y2)], minsize=minsize, thresh=thresh, convert=True)
+    #ap_list[0].ldata=ap_list[0].ldata-sk_list[0].ldata
+    #ap_list[0].ldata=ap_list[0].ldata-float(y2-y1)/(sy2-sy1)*sk_list[0].ldata
+
+    convert=True 
+    ap_list=extract(hdu, method='normal', section=[(y1,y2)], minsize=minsize, thresh=thresh, convert=convert)
+    sy1a=y2
+    sy2a=sy1a+2.0*dy
+    ska_list=extract(hdu, method='normal', section=[(sy1a,sy2a)], minsize=minsize, thresh=thresh, convert=convert)
+    sy2b=y1-dy
+    sy1b=sy2b-2.0*dy
+    skb_list=extract(hdu, method='normal', section=[(sy1b,sy2b)], minsize=minsize, thresh=thresh, convert=convert)
+    print sy1b, sy2b
+
+    sdata = 0.5*(ska_list[0].ldata/(sy2a-sy1a) + skb_list[0].ldata/(sy2b-sy1b))
+    #sdata = ska_list[0].ldata/(sy2a-sy1a)
+    #sdata = skb_list[0].ldata/(sy2b-sy1b)
     
-    ap_list[0].ldata=ap_list[0].ldata-float(y2-y1)/(sy2-sy1)*sk_list[0].ldata
+    ap_list[0].ldata=ap_list[0].ldata-float(y2-y1) * sdata
 
     if cleanspectra:
        clean_spectra(ap_list[0], grow=grow)
     
-    write_extract(outfile, [ap_list[0]], outformat='ascii', clobber=clobber)
+    if specformat == 'ascii':
+        write_extract(outfile, [ap_list[0]], outformat='ascii', clobber=clobber)
+    elif specformat == 'lcogt':
+        write_lcogt(outfile, ap_list[0], hdu, sky=float(y2-y1) * sdata, clobber=clobber)
+
+sky_lines = [] #[4358.34, 5577.338, 6300.304,6363.8000,7715.0116]
+
+def write_lcogt(outfile, ap_spec, hdu, sky, clobber=True):
+    """Write data in the format of an LCOGT output file"""
+    flux = ap_spec.ldata
+    raw = flux #flux+sky
+    err = abs(ap_spec.lvar)**0.5
+    data_table = np.array([flux, raw, raw, err])
+    print data_table.shape
+    
+    return 
+
+def clean_spectra(ap_spec, dres=2, grow=0):
+    """Clean a spectrum and make it more presenatable"""
+    xmax=len(ap_spec.ldata)
+    for w in sky_lines:
+        mask=(abs(ap_spec.wave-w)<dres)
+        ap_spec.ldata[mask] = 0
+
+    ap_spec.ldata[0] = 0
+    ap_spec.ldata[-1] = 0
+
+
+    #grow the spectra
+    if grow:
+      nid = np.where(ap_spec.ldata==0)[0]
+      for i in nid:
+          x1=max(0,int(i-grow))
+          x2=min(int(i+grow),xmax-1)
+          ap_spec.ldata[x1:x2]=0
+
+    #remove the bad pixels 
+    mask = (ap_spec.ldata!=0)
+    ap_spec.ldata=ap_spec.ldata[mask]
+    ap_spec.wave=ap_spec.wave[mask]
+
+    return ap_spec
+
 
 def smooth_data(data, mbox=25):
     mdata=median_filter(data, size=(mbox, mbox))
@@ -167,4 +232,4 @@ def findskysection(section, skysection=[800,900], skylimit=100):
 
 
 if __name__=='__main__':
-   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat='ascii', convert=True)
