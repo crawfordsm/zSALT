@@ -197,6 +197,8 @@ def clean_spectra(ap_spec, dres=2, grow=0, mask=False, replace=True):
     ap_spec.ldata[0] = 0
     ap_spec.ldata[-1] = 0
 
+    ap_spec.ldata[ap_spec.ldata<0] = 0 
+
 
     #grow the spectra
     if grow:
@@ -263,4 +265,5 @@ if __name__=='__main__':
    else: 
       calfile=None
    print calfile
-   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat='lcogt', convert=True, calfile=calfile)
+   specformat = 'lcogt'
+   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat=specformat, convert=True, calfile=calfile)
