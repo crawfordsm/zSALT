@@ -1,0 +1,25 @@
+#! /opt/local/bin/python
+import os
+import sys
+import numpy as np
+from astropy.io import fits
+from pylab import *
+
+print os.path.dirname(__file__)
+
+figure()
+n=0
+for infile in sys.argv[1:]:
+   hdu = fits.open(infile)
+   w1 = hdu[0].header['CRVAL1']
+   p1 = hdu[0].header['CRPIX1']
+   dw = hdu[0].header['CD1_1']
+   f = hdu[0].data[0][0]
+   xarr = np.arange(len(f))
+   w = (xarr)*dw+w1
+
+   f=np.convolve(f, np.ones(5), mode='same')
+   if n == 0: n = f.mean()
+   plot(w,f * n/f.mean())
+   #plot(w,e)
+show()
