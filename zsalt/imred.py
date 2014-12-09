@@ -16,7 +16,7 @@ and up to date.
 import os, sys, glob, shutil
 
 import numpy as np
-import pyfits
+from astropy.io import fits as pyfits
 from scipy.ndimage.filters import median_filter
 
  
@@ -127,15 +127,15 @@ def add_variance(filenames, bpmfile):
         nextend=nsciext
         for i in range(1, nsciext+1):
             hdu=CreateVariance(struct[i], i, nextend+i)
-            struct[i].header.set('VAREXT',nextend+i, comment='Extension for Variance Frame')
+            struct[i].header.update('VAREXT',nextend+i, comment='Extension for Variance Frame')
             struct.append(hdu)
         nextend+=nsciext
         for i in range(1, nsciext+1):
             hdu=createbadpixel(struct, badpixelstruct, i, nextend+i)
-            struct[i].header.set('BPMEXT',nextend+i, comment='Extension for Bad Pixel Mask')
+            struct[i].header.update('BPMEXT',nextend+i, comment='Extension for Bad Pixel Mask')
             struct.append(hdu)
         nextend+=nsciext
-        struct[0].header.set('NEXTEND', nextend)
+        struct[0].header.update('NEXTEND', nextend)
         if os.path.isfile(f): os.remove(f)
         struct.writeto(f)
 
