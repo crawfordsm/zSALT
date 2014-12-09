@@ -40,10 +40,10 @@ def specred(infile_list, propcode=None, inter=True, automethod='Matchlines'):
                arcimage=os.path.basename(infile_list[i])
                if lamp == 'NONE': lamp='CuAr'
                lampfile=iraf.osfn("pysalt$data/linelists/%s.wav" % lamp)
-               lampfile='/Users/crawford/research/kepler/Xe.salt' 
+               #lampfile='/Users/crawford/research/kepler/Xe.salt' 
 
                specidentify(arcimage, lampfile, dbfile, guesstype='rss',
-                  guessfile='', automethod=automethod,  function='legendre',  order=3,
+                  guessfile='', automethod=automethod,  function='legendre',  order=5,
                   rstep=100, rstart='middlerow', mdiff=20, thresh=3, niter=5, smooth=3,
                   inter=inter, clobber=True, logfile=logfile, verbose=True)
 
@@ -58,7 +58,7 @@ def specred(infile_list, propcode=None, inter=True, automethod='Matchlines'):
           img = infile_list[i]
           ##rectify it
           specrectify(img, outimages='', outpref='x', solfile=dbfile, caltype='line',
-            function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
+            function='legendre',  order=5, inttype='interp', w1=None, w2=None, dw=None, nw=None,
             blank=0.0, clobber=True, logfile=logfile, verbose=True)
 
 
