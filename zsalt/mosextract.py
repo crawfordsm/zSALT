@@ -88,7 +88,7 @@ def extract_spectra(hdu, dy=7):
     #xc = 1802
     for xc in range(len(hdu[1].data[0])):
         f = 1.0 * hdu[1].data[dy:-dy,xc]
-        e = hdu[2].data[dy:-dy,xc]
+        e = hdu[varext].data[dy:-dy,xc]
         m = (hdu[3].data[dy:-dy,xc]>0)
         y = np.arange(len(f))
         i = fmax(xc)

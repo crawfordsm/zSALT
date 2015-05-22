@@ -140,7 +140,7 @@ def add_variance(filenames, bpmfile):
         struct.writeto(f)
 
 if __name__=='__main__':
-   rawdir=sys.argv[1]
+   raw_files=glob.glob(sys.argv[1]+'P*fits')
+   bpmfile = sys.argv[2]
    prodir=os.path.curdir+'/'
-   bpmfile = os.path.dirname(sys.argv[0]) + '/bpm_sn.fits'
-   imred(rawdir, prodir, cleanup=True, bpmfile=bpmfile)
+   imred(raw_files, prodir, cleanup=True, bpmfile=bpmfile)
