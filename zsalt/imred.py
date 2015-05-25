@@ -16,7 +16,7 @@ and up to date.
 import os, sys, glob, shutil
 
 import numpy as np
-from astropy.io import fits as pyfits
+import pyfits
 from scipy.ndimage.filters import median_filter
 
  
@@ -127,20 +127,20 @@ def add_variance(filenames, bpmfile):
         nextend=nsciext
         for i in range(1, nsciext+1):
             hdu=CreateVariance(struct[i], i, nextend+i)
-            struct[i].header.update('VAREXT',nextend+i, comment='Extension for Variance Frame')
+            struct[i].header.set('VAREXT',nextend+i, comment='Extension for Variance Frame')
             struct.append(hdu)
         nextend+=nsciext
         for i in range(1, nsciext+1):
             hdu=createbadpixel(struct, badpixelstruct, i, nextend+i)
-            struct[i].header.update('BPMEXT',nextend+i, comment='Extension for Bad Pixel Mask')
+            struct[i].header.set('BPMEXT',nextend+i, comment='Extension for Bad Pixel Mask')
             struct.append(hdu)
         nextend+=nsciext
-        struct[0].header.update('NEXTEND', nextend)
+        struct[0].header.set('NEXTEND', nextend)
         if os.path.isfile(f): os.remove(f)
         struct.writeto(f)
 
 if __name__=='__main__':
-   rawdir=sys.argv[1]
+   raw_files=glob.glob(sys.argv[1]+'P*fits')
+   bpmfile = sys.argv[2]
    prodir=os.path.curdir+'/'
-   bpmfile = os.path.dirname(sys.argv[0]) + '/bpm_sn.fits'
-   imred(rawdir, prodir, cleanup=True, bpmfile=bpmfile)
+   imred(raw_files, prodir, cleanup=True, bpmfile=bpmfile)
