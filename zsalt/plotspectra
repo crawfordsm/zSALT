@@ -1,0 +1,17 @@
+#! /usr/local/bin/python
+import os
+import sys
+import numpy as np
+from pylab import *
+
+
+figure()
+n=0
+for infile in sys.argv[1:]:
+   #w, f, e =loadtxt(infile, usecols=(0,1, 2), unpack=True)
+   w, f =loadtxt(infile, usecols=(0,1), unpack=True)
+   f=np.convolve(f, np.ones(5), mode='same')
+   if n == 0: n = f.mean()
+   plot(w,f * n/f.mean())
+   #plot(w,e)
+show()
