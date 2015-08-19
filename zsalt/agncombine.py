@@ -20,7 +20,7 @@ for infile in sys.argv[1:]:
    flux_list.append(hdu[0].data[0][0])
    raw_list.append(hdu[0].data[1][0])
    sky_list.append(hdu[0].data[2][0])
-   var_list.append(hdu[0].data[3][0])
+   var_list.append(hdu[0].data[3][0]**2)
 
 
    
@@ -45,7 +45,8 @@ var_list[var_list==0] = var_list[var_list>0].min()
 flux = np.average(np.array(flux_list), axis=0, weights=1.0/var_list)
 raw  = np.average(np.array(raw_list), axis=0, weights=1.0/var_list)
 sky  = np.average(np.array(sky_list), axis=0, weights=1.0/var_list)
-var = np.std(np.array(flux_list), axis=0)
+var = np.average(np.array(var_list), axis=0)
+var = var**0.5
 
 hdu = hdu_list[0]
 hdu[0].data[0][0] = flux
@@ -63,4 +64,4 @@ print name #len(w), len(flux)
 figure()
 plot(w, var)
 
-show()
+#show()
