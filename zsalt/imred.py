@@ -16,7 +16,7 @@ and up to date.
 import os, sys, glob, shutil
 
 import numpy as np
-import pyfits
+from astropy.io import fits
 from scipy.ndimage.filters import median_filter
 
  
@@ -122,7 +122,7 @@ def add_variance(filenames, bpmfile):
     file_list=glob.glob(filenames)
     badpixelstruct = saltio.openfits(bpmfile)
     for f in file_list:
-        struct = pyfits.open(f)
+        struct = fits.open(f)
         nsciext=len(struct)-1
         nextend=nsciext
         for i in range(1, nsciext+1):
