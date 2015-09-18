@@ -14,6 +14,9 @@ from scipy.ndimage.filters import median_filter
 
 
 from extract import extract, write_extract
+from calfunc import calfunc
+
+import spectools as st
 
 from PySpectrograph.Spectra import findobj, Spectrum
 
@@ -31,8 +34,8 @@ def agnextract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True
        from specslitnormalize import specslitnormalize
        specslitnormalize(img, 'n'+img, '', response=None, response_output=None, order=3, conv=1e-2, niter=20,
                      startext=0, clobber=True,logfile='salt.log',verbose=True)
-
-    hdu=pyfits.open('n'+img)
+       img = 'n'+img
+    hdu=pyfits.open(img)
     target=hdu[0].header['OBJECT']
     ofile='%s.%s_%i_%i.ltxt' % (target, extract_date(img), extract_number(img), yc)
     if specformat=='lcogt': ofile=ofile.replace('ltxt', 'fits')
@@ -126,7 +129,8 @@ def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=Fa
            cal_spectra=st.readspectrum(calfile, error=False, ftype='ascii')
            airmass=hdu[0].header['AIRMASS']
            exptime=hdu[0].header['EXPTIME']
-           extfile=iraf.osfn("pysalt$data/site/suth_extinct.dat")
+           extfile=os.path.dirname(st.__file__)+"/suth_extinct.dat"
+           print extfile
            ext_spectra=st.readspectrum(extfile, error=False, ftype='ascii')
 
            flux_spec=Spectrum.Spectrum(ap_list[0].wave, ap_list[0].ldata, abs(ap_list[0].lvar)**0.5, stype='continuum')
