@@ -13,19 +13,11 @@ import pyfits
 from scipy.ndimage.filters import median_filter
 
 
-from pyraf import iraf
-from iraf import pysalt
-
-from specsky import skysubtract
-from specextract import extract, write_extract
-from specslitnormalize import specslitnormalize
-from specsens import specsens
-from speccal import speccal, calfunc
-import spectools as st
+from extract import extract, write_extract
 
 from PySpectrograph.Spectra import findobj, Spectrum
 
-def galextract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True, specformat='ascii'):
+def agnextract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True, specformat='ascii'):
 
     
     #set up some files that will be needed
@@ -36,6 +28,7 @@ def galextract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True
     spec_list=[]
     #skynormalize the data
     if normalize:
+       from specslitnormalize import specslitnormalize
        specslitnormalize(img, 'n'+img, '', response=None, response_output=None, order=3, conv=1e-2, niter=20,
                      startext=0, clobber=True,logfile='salt.log',verbose=True)
 
@@ -266,4 +259,4 @@ if __name__=='__main__':
       calfile=None
    print calfile
    specformat = 'lcogt'
-   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat=specformat, convert=True, calfile=calfile)
+   agnextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat=specformat, convert=True, calfile=calfile, normalize=False)
