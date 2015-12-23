@@ -98,9 +98,9 @@ def imred(infile_list, prodir, bpmfile=None, gaindb = None, geomfile = None, cle
     for i in range(len(infile_list)):
         if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS'):
           img='fxgbp'+os.path.basename(infile_list[i])
-          #saltcrclean(img, img, '', crtype='edge', thresh=5, mbox=11, bthresh=5.0,
-          #      flux_ratio=0.2, bbox=25, gain=1.0, rdnoise=5.0, fthresh=5.0, bfactor=2,
-          #      gbox=3, maxiter=5, multithread=True,  clobber=True, logfile=logfile, verbose=True)
+          saltcrclean(img, img, '', crtype='edge', thresh=5, mbox=11, bthresh=5.0,
+                flux_ratio=0.2, bbox=25, gain=1.0, rdnoise=5.0, fthresh=5.0, bfactor=2,
+                gbox=3, maxiter=5, multithread=True,  clobber=True, logfile=logfile, verbose=True)
 
     #mosaic the data
     if geomfile is None: geomfile=iraf.osfn("pysalt$data/rss/RSSgeom.dat")
@@ -111,8 +111,8 @@ def imred(infile_list, prodir, bpmfile=None, gaindb = None, geomfile = None, cle
 
     #add needed header columns and make a better mask
     for img in infile_list:
-        filename = 'mxgbp'+os.path.basename(img)
-        hdu = pyfits.open(filename, 'update')
+        filename = 'mfxgbp'+os.path.basename(img)
+        hdu = fits.open(filename, 'update')
         hdu[2].header.update('EXTNAME','VAR')
         hdu[3].header.update('EXTNAME','BPM')
         bpm_rc = (hdu[3].data>0).astype('uint8')
@@ -193,7 +193,7 @@ def masterbadpixel(inhdu, bphdu, sci_ext, bp_ext):
     header.update('EXTVER',bp_ext)
     header.update('SCIEXT',sci_ext,comment='Extension of science frame')
 
-    return pyfits.ImageHDU(data=data, header=header, name='BPM')
+    return fits.ImageHDU(data=data, header=header, name='BPM')
 
 
 if __name__=='__main__':
