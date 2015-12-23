@@ -10,7 +10,7 @@ class zsaltError(Exception):
    pass
 
 __all__=[]
-__version__=0.1.dev
+__version__='0.1.dev'
 
 
 
