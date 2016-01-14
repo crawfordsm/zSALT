@@ -86,22 +86,6 @@ def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=Fa
 
     y1=yc-dy
     y2=yc+dy
-
-    #sy1=y2-2*dy
-    #sy2=y2+2*dy
-
-    #sdata = 1.0 * data 
-    #y,x = np.indices(sdata.shape)
-    #for i in range(sdata.shape[1]):
-    #   mask=(hdu[3].data[:,i]==0)
-    #   mask[sy1:sy2] = 0
-    #   if mask.sum()>0:
-    #     sdata[y1:y2,i] = np.interp(y[y1:y2,i], y[:,i][mask], data[:,i][mask])  
-    #hdu[1].data = sdata
-    #sk_list=extract(hdu, method='normal', section=[(y1,y2)], minsize=minsize, thresh=thresh, convert=True)
-    #ap_list[0].ldata=ap_list[0].ldata-sk_list[0].ldata
-    #ap_list[0].ldata=ap_list[0].ldata-float(y2-y1)/(sy2-sy1)*sk_list[0].ldata
-
     ap_list=extract(hdu, method='normal', section=[(y1,y2)], minsize=minsize, thresh=thresh, convert=convert)
     sy1a=y2
     sy2a=sy1a+2.0*dy
@@ -115,8 +99,9 @@ def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=Fa
     #sdata = ska_list[0].ldata/(sy2a-sy1a)
     #sdata = skb_list[0].ldata/(sy2b-sy1b)
     raw = 1.0 * ap_list[0].ldata
-    
+    print 'extract:', ap_list[0].ldata[1124]
     ap_list[0].ldata=ap_list[0].ldata-float(y2-y1) * sdata
+    print 'sky:', ap_list[0].ldata[1124]
  
     print ap_list[0].wave[10], ap_list[0].ldata[10], ap_list[0].lvar[10]
     flux_spec=Spectrum.Spectrum(ap_list[0].wave, ap_list[0].ldata, abs(ap_list[0].lvar)**0.5, stype='continuum')
@@ -124,6 +109,7 @@ def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=Fa
 
     if cleanspectra:
        clean_spectra(ap_list[0], grow=grow)
+    print 'clean:', ap_list[0].ldata[1124]
 
     if calfile:
            cal_spectra=st.readspectrum(calfile, error=False, ftype='ascii')

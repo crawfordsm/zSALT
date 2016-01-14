@@ -37,8 +37,9 @@ def galextract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True
     if normalize:
        specslitnormalize(img, 'n'+img, '', response=None, response_output=None, order=3, conv=1e-2, niter=20,
                      startext=0, clobber=True,logfile='salt.log',verbose=True)
+       img = 'n'+img
 
-    hdu=pyfits.open('n'+img)
+    hdu=pyfits.open(img)
     target=hdu[0].header['OBJECT']
     ofile='%s.%s_%i_%i.ltxt' % (target, extract_date(img), extract_number(img), yc)
     #ofile = img.replace('fits', 'txt')
@@ -232,4 +233,4 @@ def findskysection(section, skysection=[800,900], skylimit=100):
 
 
 if __name__=='__main__':
-   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat='ascii', convert=True)
+   galextract(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), specformat='ascii', convert=True, normalize=False)
