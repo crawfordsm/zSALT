@@ -47,7 +47,7 @@ def specred(infile_list, propcode=None, inter=True, automethod='Matchlines'):
 
                #straighten the arc
                specarcstraighten(arcimage, sdbfile , function='legendre', order=2, rstep=10,
-                      rstart='middlerow', nrows=1, dcoef=None, ndstep=10,
+                      rstart='middlerow', nrows=1, dcoef=[0.5, 1.0, 0.0], ndstep=10,
                       startext=0, clobber=False, logfile='salt.log', verbose=True)
 
                #rectify it
