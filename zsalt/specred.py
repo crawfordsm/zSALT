@@ -23,7 +23,7 @@ from specrectify import specrectify
 from specarcstraighten import specarcstraighten
 
 
-def specred(infile_list, propcode=None, inter=True, automethod='Matchlines'):
+def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod='Matchlines'):
 
     #set up the files
     infiles=','.join(['%s' % x for x in infile_list])
@@ -56,9 +56,16 @@ def specred(infile_list, propcode=None, inter=True, automethod='Matchlines'):
                    blank=0.0, clobber=True, logfile=logfile, verbose=True)
 
                #idnetify the line
-               specidentify('s'+arcimage, lampfile, dbfile, guesstype='rss',
-                  guessfile='', automethod=automethod,  function='legendre',  order=3,
-                  rstep=100, rstart='middlerow', mdiff=20, thresh=3, niter=5, smooth=3,
+               if guessfile is None:
+                   guesstype='rss'
+                   guessfile=''
+               else:
+                   guesstype='file'
+                   
+               
+               specidentify('s'+arcimage, lampfile, dbfile, guesstype=guesstype,
+                  guessfile=guessfile, automethod=automethod,  function='legendre',  order=3,
+                  rstep=100, rstart='middlerow', mdiff=20, thresh=5, niter=5, smooth=3,
                   inter=inter, clobber=True, logfile=logfile, verbose=True)
 
                #apply the final rectification
