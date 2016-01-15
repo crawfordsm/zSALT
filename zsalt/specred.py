@@ -33,6 +33,9 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
     logfile='spec'+obsdate+'.log'
     dbfile='spec%s.db' % obsdate
     sdbfile='spec_straight_%s.db' % obsdate
+    straight_function = 'legendre'
+    straight_order = 2
+    dcoef = [0.50, 1.0, 0.0] 
 
     #create the observation log
     obs_dict=obslog(infile_list)
@@ -46,14 +49,14 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
                #lampfile='/Users/crawford/research/kepler/Xe.salt' 
 
                #straighten the arc
-               specarcstraighten(arcimage, sdbfile , function='legendre', order=2, rstep=10,
-                      rstart='middlerow', nrows=1, dcoef=[0.5, 1.0, 0.0], ndstep=10,
+               specarcstraighten(arcimage, sdbfile , function=straight_function, order=straight_order, rstep=20,
+                      rstart='middlerow', nrows=1, dcoef=dcoef, ndstep=10,
                       startext=0, clobber=False, logfile='salt.log', verbose=True)
 
                #rectify it
                specrectify(arcimage, outimages='', outpref='s', solfile=sdbfile, caltype='line',
-                   function='legendre',  order=2, inttype='interp', w1=None, w2=None, dw=None, nw=None,
-                   blank=0.0, clobber=True, logfile=logfile, verbose=True)
+                   function=straight_function,  order=straight_order, inttype='interp', w1=None, w2=None, dw=None, nw=None,
+                   nearest=True, blank=0.0, clobber=True, logfile=logfile, verbose=True)
 
                #idnetify the line
                if guessfile is None:
@@ -62,12 +65,11 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
                else:
                    guesstype='file'
                    
-               
                specidentify('s'+arcimage, lampfile, dbfile, guesstype=guesstype,
                   guessfile=guessfile, automethod=automethod,  function='legendre',  order=3,
                   rstep=100, rstart='middlerow', mdiff=20, thresh=5, niter=5, smooth=3,
                   inter=inter, clobber=True, logfile=logfile, verbose=True)
-
+ 
                #apply the final rectification
                specrectify('s'+arcimage, outimages='', outpref='x', solfile=dbfile, caltype='line',
                    function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
