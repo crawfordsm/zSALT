@@ -1,4 +1,4 @@
-import sys
+import os, sys
 import pyfits
 import numpy as np
 from PySpectrograph import Spectrum
@@ -110,7 +110,7 @@ if __name__=='__main__':
    x1,x2=sp.get_xlim()
    y1,y2=sp.get_ylim()
    print y1,y2, x1,x2
-   line_wave, line_name=readlinelist('redshift/sdss.linelist')
+   line_wave, line_name=readlinelist(os.path.dirname(__file__)+'/sdss.linelist')
    dx=10
    for w,n in zip(line_wave, line_name):
      w=float(w)*(1+z)
