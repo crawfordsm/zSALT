@@ -1,11 +1,4 @@
 
-"""
-AGNEXTRACT
-
-extract galaxy spectra from image or images and combine them
-
-"""
-
 import os, sys, glob, shutil
 
 import numpy as np

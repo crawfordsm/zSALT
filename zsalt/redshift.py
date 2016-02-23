@@ -71,7 +71,7 @@ if __name__=='__main__':
    template=loadsdss(thdu)
 
 
-   #z_arr, cc_arr=xcor_redshift(spec, template, z1=3.0, z2=5.5, zstep=0.001)
+   #z_arr, cc_arr=xcor_redshift(spec, template, z1=0.0, z2=5.5, zstep=0.01)
    z_arr, cc_arr=xcor_redshift(spec, template, z1=0.0, z2=0.8, zstep=0.0001)
    z=z_arr[cc_arr.argmax()]
    print z

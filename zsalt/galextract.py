@@ -6,24 +6,6 @@ extract galaxy spectra from image or images and combine them
 
 """
 
-import os, sys, glob, shutil
-
-import numpy as np
-import pyfits
-from scipy.ndimage.filters import median_filter
-
-
-from pyraf import iraf
-from iraf import pysalt
-
-from specsky import skysubtract
-from specextract import extract, write_extract
-from specslitnormalize import specslitnormalize
-from specsens import specsens
-from speccal import speccal
-
-from PySpectrograph.Spectra import findobj
-
 from agnextract import salt_extract
 
 if __name__=='__main__':
