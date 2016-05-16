@@ -1,14 +1,20 @@
 import os, sys, glob
-reddir = '[PATHTOZSALT]/zSALT/zsalt/'
-sys.path.append(reddir)
-bpmfile = '[PATHTOBPM]/bpm.fits'
-propid = '[PROPID]'
 
 from imred import imred
 from specred import specred
+import argparse
+
+bpmfile = os.path.dirname(__file__)+'/bpm_2x4.fits'
 
 
-ddir = sys.argv[1]
+parser = argparse.ArgumentParser(description='Reduce SALT Lens Data')
+parser.add_argument('ddir', help='Top level directory with SALT data')
+parser.add_argument('-s', dest='basic_red', default=True, action='store_false',
+                    help='Skip basic reduction')
+
+args = parser.parse_args()
+ddir = args.ddir
+
 
 os.chdir(ddir)
 if not os.path.isdir('sci'): os.mkdir('sci')
@@ -16,17 +22,14 @@ os.chdir('sci')
 
 #basic image reuctions
 infile_list = glob.glob('../raw/P*fits')
-imred(infile_list, './', bpmfile, cleanup=True)
+if args.basic_red: imred(infile_list, './', bpmfile, cleanup=True)
 
 #spectroscopic reductions
+propid=None
 infile_list = glob.glob('m*fits')
-specred(infile_list, propid, inter=True)
+specred(infile_list, propid, inter=True, guessfile=None)
 
-#UNEDIT IF YOU WANT TO REDUCE MOS DATA
-#mosxml = [MOSXMLFILE]
-#mosred = infile_list, propid, mosxml, inter=True)
-
-
+#extract the data
 
 
 
