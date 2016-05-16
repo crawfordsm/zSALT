@@ -41,7 +41,7 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
     obs_dict=obslog(infile_list)
     for i in range(len(infile_list)):
            print infile_list[i], obs_dict['OBJECT'][i].upper().strip(), obs_dict['PROPID'][i].upper().strip()
-           if obs_dict['OBJECT'][i].upper().strip()=='ARC' and obs_dict['PROPID'][i].upper().strip()==propcode:
+           if obs_dict['OBJECT'][i].upper().strip()=='ARC' and (propcode is None or obs_dict['PROPID'][i].upper().strip()==propcode):
                lamp=obs_dict['LAMPID'][i].strip().replace(' ', '')
                arcimage=os.path.basename(infile_list[i])
                if lamp == 'NONE': lamp='CuAr'
@@ -78,7 +78,7 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
     objimages=''
     spec_list=[]
     for i in range(len(infile_list)):
-       if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS')  and obs_dict['PROPID'][i].upper().strip()==propcode:
+       if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS')  and (propcode is None or obs_dict['PROPID'][i].upper().strip()==propcode):
           img = infile_list[i]
           # rectify it
           specrectify(img, outimages='', outpref='s', solfile=sdbfile, caltype='line',
@@ -88,11 +88,4 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
           specrectify('s'+img, outimages='', outpref='x', solfile=dbfile, caltype='line',
             function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
             blank=0.0, nearest=True, clobber=True, logfile=logfile, verbose=True)
-
-
-  
-
-
-    
-
 
