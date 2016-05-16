@@ -14,12 +14,8 @@ Instructions
 2. Run the script 'gettemplates.sh' in the directory to download
    the SDSS templates. 
 
-3. Copy the script 'reducedata.py' to the directory that has the
-   data that you want to reduce.   Edit this file to point to the 
-   zsalt directory, the proposal code, and the bad pixel file map.
-   If you are using MOS data, edit the file to point to the xml
-   file describing the MOS mask and to use mosred instead of
-   specred.
+3. Run the script 'reducedata.py' from the zsalt directory on the directory that has the data that you want to reduce.  
+
 
 4. The directory where you will run the data should have the format
    such that in the top level directory there should be the
@@ -32,7 +28,7 @@ Instructions
 
    python reducedata.py 20131227
 
-   Replace the obsdate with the appropriate observations date
+   Replace the obsdate with the appropriate observations date and location of that director
 
 6. Reducedata should step through all the tasks needed to produce
    wavelength calibrated images.   There will be one interactive
@@ -47,11 +43,11 @@ Instructions
    then ask for the central row of the object to be extract.  This 
    can be repeated for different rows. 
 
-   python extractobject.py xmfxgbpP201302010093.fits
+   python galextract xmfxgbpP201302010093.fits 513 5
 
-   You will either need the full path to extractobject.py or copy it 
-   into the directory.  This will perform a sky subtraction and 
-   extraction of the spectrum.
+   You will either need the full path to extractobject.py. This will perform a sky subtraction and 
+   extraction of the spectrum.  Provide the filename, the y-center of the spectrum to extract, and the 
+   half-width of the aperture to extract. 
 
 9. To calculate the redshift, use redshift.py. You will have to give
    it a template to match and different templates are available 
