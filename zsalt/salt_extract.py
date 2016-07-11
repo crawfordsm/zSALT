@@ -13,7 +13,7 @@ import spectools as st
 
 from PySpectrograph.Spectra import findobj, Spectrum
 
-def salt_extract(img, yc=None, dy=None, normalize=True, calfile=None, convert=True, specformat='ascii'):
+def salt_extract(img, yc=None, dy=None, normalize=True, ext=1, calfile=None, convert=True, specformat='ascii'):
 
     
     #set up some files that will be needed
@@ -39,12 +39,12 @@ def salt_extract(img, yc=None, dy=None, normalize=True, calfile=None, convert=Tr
  
 
 
-def extract_spectra(hdu, yc, dy, outfile, minsize=5, thresh=3, grow=0, smooth=False, maskzeros=False, 
+def extract_spectra(hdu, yc, dy, outfile, ext=1, minsize=5, thresh=3, grow=0, smooth=False, maskzeros=False, 
                     convert=True,  cleanspectra=True, calfile=None, clobber=True, specformat='ascii'):
     """From an image, extract a spectra.   
 
     """
-    data=hdu[1].data
+    data=hdu[ext].data
 
     #replace the zeros with the average from the frame
     if maskzeros:

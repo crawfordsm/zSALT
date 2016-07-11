@@ -18,7 +18,9 @@ if __name__=='__main__':
                    help='SPST calibration file')
     parser.add_argument('--f', dest='format', default='ascii', choices=['ascii','lcogt'],
                    help='Format for output file')
+    parser.add_argument('--e', dest='ext', default=1, type=int,
+                   help='Extension to extract')
     args = parser.parse_args()
 
    
-    salt_extract(args.objfile, args.yc, args.dy, specformat=args.format, calfile=args.cal_file, convert=True, normalize=False)
+    salt_extract(args.objfile, args.yc, args.dy, specformat=args.format, ext=args.ext, calfile=args.cal_file, convert=True, normalize=False)

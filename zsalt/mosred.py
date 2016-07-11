@@ -39,12 +39,12 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss
 
     #apply the mask to the data sets
     for i in range(len(infile_list)):
-        specslit(image=infile_list[i], outimage='', outpref='s', exttype='rsmt', slitfile='../../P001423N01.xml', 
+        specslit(image=infile_list[i], outimage='', outpref='s', exttype='rsmt', slitfile=slitmask,
                  outputslitfile='', regprefix='ds_', sections=3, width=25.0, sigma=2.2, thres=6.0, order=1, padding=5, yoffset=dy, 
                  inter=False, clobber=True, logfile=logfile, verbose=True)
 
     for i in range(len(infile_list)):
-           if obs_dict['OBJECT'][i].upper().strip()=='ARC' and obs_dict['PROPID'][i].upper().strip()==propcode:
+           if obs_dict['OBJECT'][i].upper().strip()=='ARC' and (obs_dict['PROPID'][i].upper().strip()==propcode or propcode is None):
                lamp=obs_dict['LAMPID'][i].strip().replace(' ', '')
                arcimage='s'+os.path.basename(infile_list[i])
                if lamp == 'NONE': lamp='CuAr'
@@ -55,7 +55,7 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss
                specidentify('a'+arcimage, lampfile, dbfile, guesstype=guesstype,
                   guessfile=guessfile, automethod=automethod,  function='legendre',  order=3,
                   rstep=rstep, rstart='middlerow', mdiff=20, thresh=3, niter=5, smooth=3,
-                  inter=False, clobber=True, logfile=logfile, verbose=True)
+                  inter=True, clobber=True, logfile=logfile, verbose=True)
 
                #specrectify(arcimage, outimages='', outpref='x', solfile=dbfile, caltype='line',
                #    function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
@@ -65,7 +65,7 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss
     spec_list=[]
     for i in range(len(infile_list)):
        if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS')  and \
-          obs_dict['PROPID'][i].upper().strip()==propcode and \
+          (obs_dict['PROPID'][i].upper().strip()==propcode or propcode is None) and \
           obs_dict['OBSMODE'][i].count('SPECTROSCOPY'):
           img = infile_list[i]
           ##rectify it
