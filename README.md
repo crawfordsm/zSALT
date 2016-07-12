@@ -59,4 +59,8 @@ Instructions
    the template at the best fit redshift.  This may need to be 
    repeated for different redshifts
 
-10. run agnextract to produce the spectrum
+10. Instructions for AGN Extraction
+   To extract the AGN, run agnextract.py. Give it a filename, y-center (central row of the object )and dy (half width of the object) like so
+   python agnextract.py xsmfxgbpP201505200016.fits 552 5
+   
+   This will extract galaxy spectra from the image.
