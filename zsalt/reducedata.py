@@ -4,8 +4,7 @@ from imred import imred
 from specred import specred
 import argparse
 
-bpmfile = os.path.dirname(__file__)+'/bpm_2x4.fits'
-
+bpmfile = os.path.dirname(os.path.abspath(__file__))+'/bpm_2x4.fits'
 
 parser = argparse.ArgumentParser(description='Reduce SALT Lens Data')
 parser.add_argument('ddir', help='Top level directory with SALT data')
