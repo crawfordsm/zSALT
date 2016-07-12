@@ -59,4 +59,4 @@ Instructions
    the template at the best fit redshift.  This may need to be 
    repeated for different redshifts
 
-
+10. run agnextract to produce the spectrum
