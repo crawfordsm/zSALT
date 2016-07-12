@@ -81,11 +81,11 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
        if obs_dict['CCDTYPE'][i].count('OBJECT') and obs_dict['INSTRUME'][i].count('RSS')  and (propcode is None or obs_dict['PROPID'][i].upper().strip()==propcode):
           img = infile_list[i]
           # rectify it
-          specrectify(img, outimages='', outpref='s', solfile=sdbfile, caltype='line',
-              function='legendre',  order=2, inttype='interp', w1=None, w2=None, dw=None, nw=None,
-              blank=0.0, clobber=True, logfile=logfile, verbose=True)
+          #specrectify(img, outimages='', outpref='s', solfile=sdbfile, caltype='line',
+          #    function='legendre',  order=2, inttype='interp', w1=None, w2=None, dw=None, nw=None,
+          #    blank=0.0, clobber=True, logfile=logfile, verbose=True)
 
-          specrectify('s'+img, outimages='', outpref='x', solfile=dbfile, caltype='line',
+          specrectify(img, outimages='', outpref='x', solfile=dbfile, caltype='line',
             function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
             blank=0.0, nearest=True, clobber=True, logfile=logfile, verbose=True)
 
