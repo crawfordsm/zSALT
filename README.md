@@ -38,7 +38,8 @@ Instructions
    that was created.  Skylines should be straight and cosmic
    rays should be cleaned. 
 
-To extract spectra and measure the redshift: 
+To extract spectra and measure the redshift
+-------------------------------------------
 
    A. use extractobject.py.  This can be called just
    by giving the frame name in which to extract the object.  It will
@@ -61,11 +62,11 @@ To extract spectra and measure the redshift:
    the template at the best fit redshift.  This may need to be 
    repeated for different redshifts
 
-To extract the AGN for the LCOGT project:
+To extract the AGN for the LCOGT project
+----------------------------------------
 
-Run agnextract.py. Give it a filename, y-center (central row of the object ) and 
-    dy (half width of the object) like so
+Run agnextract.py. Give it a filename, y-center (central row of the object ) and dy (half width of the object) like so:
 
          python agnextract.py xsmfxgbpP201505200016.fits 552 5
-   
-    This will extract galaxy spectra from the image.
+    
+This will extract galaxy spectra from the image.
