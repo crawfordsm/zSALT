@@ -62,6 +62,6 @@ Instructions
 10. To extract the AGN, run agnextract.py. Give it a filename, y-center (central row of the object ) and 
     dy (half width of the object) like so
 
-    python agnextract.py xsmfxgbpP201505200016.fits 552 5
+         python agnextract.py xsmfxgbpP201505200016.fits 552 5
    
     This will extract galaxy spectra from the image.
