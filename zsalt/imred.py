@@ -113,8 +113,8 @@ def imred(infile_list, prodir, bpmfile=None, gaindb = None, geomfile = None, cle
     for img in infile_list:
         filename = 'mfxgbp'+os.path.basename(img)
         hdu = fits.open(filename, 'update')
-        hdu[2].header.update('EXTNAME','VAR')
-        hdu[3].header.update('EXTNAME','BPM')
+        hdu[2].header['EXTNAME']='VAR'
+        hdu[3].header['EXTNAME']='BPM'
         bpm_rc = (hdu[3].data>0).astype('uint8')
         zeroscicol = hdu['SCI'].data.sum(axis=0) == 0
         bpmgapcol = bpm_rc.mean(axis=0) == 1
@@ -143,7 +143,7 @@ def add_variance(filenames, bpmfile):
         nextend=nsciext
         for i in range(1, nsciext+1):
             hdu=CreateVariance(struct[i], i, nextend+i)
-            hdu.header.update('EXTNAME','VAR')
+            hdu.header['EXTNAME']='VAR'
             struct[i].header['VAREXT'] = (nextend+i, 'Extension for Variance Frame')
             struct.append(hdu)
         nextend+=nsciext
@@ -153,12 +153,14 @@ def add_variance(filenames, bpmfile):
             else:
                 hdu=createbadpixel(struct, badpixelstruct, i, nextend+i)
             struct[i].header['BPMEXT']=(nextend+i, 'Extension for Bad Pixel Mask')
-            hdu.header.update('EXTNAME','BPM')
+            hdu.header['EXTNAME']='BPM'
             struct.append(hdu)
         nextend+=nsciext
         struct[0].header['NEXTEND'] = nextend
         if os.path.isfile(f): os.remove(f)
         struct.writeto(f)
+
+
 
 def masterbadpixel(inhdu, bphdu, sci_ext, bp_ext):
     """Create the bad pixel hdu bp_ext for inhdu[sci_ext] from a master, bphdu
@@ -190,8 +192,8 @@ def masterbadpixel(inhdu, bphdu, sci_ext, bp_ext):
             data = bin_rc[ r1:r2, c1:c2 ].astype('uint8')
 
     header=inhdu[sci_ext].header.copy()
-    header.update('EXTVER',bp_ext)
-    header.update('SCIEXT',sci_ext,comment='Extension of science frame')
+    header['EXTVER']=bp_ext
+    header['SCIEXT'] = (sci_ext,'Extension of science frame')
 
     return fits.ImageHDU(data=data, header=header, name='BPM')
 
