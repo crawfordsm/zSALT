@@ -20,7 +20,9 @@ if __name__=='__main__':
                    help='Format for output file')
     parser.add_argument('--e', dest='ext', default=1, type=int,
                    help='Extension to extract')
+    parser.add_argument('--n', dest='clean', default=True, action='store_false',
+                   help='Do not clean spectra')
     args = parser.parse_args()
 
    
-    salt_extract(args.objfile, args.yc, args.dy, specformat=args.format, ext=args.ext, calfile=args.cal_file, convert=True, normalize=False)
+    salt_extract(args.objfile, args.yc, args.dy, specformat=args.format, ext=args.ext, calfile=args.cal_file, convert=True, normalize=False, cleanspectra=args.clean)
