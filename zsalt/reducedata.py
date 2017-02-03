@@ -5,7 +5,7 @@ from specred import specred
 import argparse
 
 #bpmfile = os.path.dirname(os.path.abspath(__file__))+'/bpm_2x4.fits'
-bpmfile = os.path.dirname(imred.__file__)+'/data/bpm_rss_11.fits'
+bpmfile = os.path.dirname(__file__)+'/data/bpm_rss_11.fits'
 
 
 parser = argparse.ArgumentParser(description='Reduce SALT Lens Data')
