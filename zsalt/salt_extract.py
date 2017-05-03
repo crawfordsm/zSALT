@@ -13,7 +13,7 @@ import spectools as st
 
 from PySpectrograph.Spectra import findobj, Spectrum
 
-def salt_extract(img, yc=None, dy=None, normalize=True, ext=1, calfile=None, convert=True, specformat='ascii'):
+def salt_extract(img, yc=None, dy=None, normalize=True, ext=1, calfile=None, convert=True, specformat='ascii', clean_spectra=True):
 
     
     #set up some files that will be needed
@@ -34,7 +34,7 @@ def salt_extract(img, yc=None, dy=None, normalize=True, ext=1, calfile=None, con
     if specformat=='lcogt': ofile=ofile.replace('ltxt', 'fits')
     #ofile = img.replace('fits', 'txt')
 
-    extract_spectra(hdu, yc, dy, ofile, smooth=False, grow=10, clobber=True, specformat=specformat, convert=convert, calfile=calfile)
+    extract_spectra(hdu, yc, dy, ofile, smooth=False, grow=10, clobber=True, specformat=specformat, convert=convert, calfile=calfile, cleanspectra=clean_spectra)
 
  
 

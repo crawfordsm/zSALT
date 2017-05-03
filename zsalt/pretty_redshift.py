@@ -84,6 +84,7 @@ if __name__=='__main__':
 
    z_arr, cc_arr=xcor_redshift(spec, template, z1=z1, z2=z2, zstep=0.0001)
    z=z_arr[cc_arr.argmax()]
+   z = zc
    print z
    #z_arr, cc_arr=xcor_redshift(spec, template, z1=z-0.05, z2=z+0.05, zstep=0.0001)
    #z=z_arr[cc_arr.argmax()]
@@ -122,8 +123,8 @@ if __name__=='__main__':
        #else:
        #   dx=100
    spname=sys.argv[4]
-   sp.text(4500,0.8*y2,spname, fontsize=24)
-   sp.text(4500,0.70*y2,'z=%5.4f' % zc, fontsize=24)
+   sp.text(x1+0.1*(x2-x1),0.8*y2,spname, fontsize=24)
+   sp.text(x1+0.1*(x2-x1),0.70*y2,'z=%5.4f' % zc, fontsize=24)
    sp.set_ylabel('Counts')
    sp.set_xlabel('$\lambda \ (\AA)$')
    if len(sys.argv)>5:
