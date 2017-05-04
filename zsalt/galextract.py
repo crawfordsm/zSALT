@@ -25,4 +25,4 @@ if __name__=='__main__':
     args = parser.parse_args()
 
    
-    salt_extract(args.objfile, args.yc, args.dy, specformat=args.format, ext=args.ext, calfile=args.cal_file, convert=True, normalize=False, cleanspectra=args.clean)
+    salt_extract(args.objfile, args.yc, args.dy, specformat=args.format, ext=args.ext, calfile=args.cal_file, convert=True, normalize=False, clean_spectra=args.clean)
