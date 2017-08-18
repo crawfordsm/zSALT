@@ -34,7 +34,7 @@ def mos_extract(img, y1, y2, sy1, sy2, ext=None, normalize=True, calfile=None, s
     flux = ap[0].ldata/(y2-y1) - sk[0].ldata/(sy2-sy1)
     flux[flux < 1] = np.median(flux)
     flux_spec = Spectrum.Spectrum(ap[0].wave, flux, abs(ap[0].lvar)**0.5, stype='continuum')
-    outfile = 'CHILES_%s_%s.txt' % (hdu[ext].header['SLITNAME'].strip(), img.split('.')[0][-2:])
+    outfile = '{}_{}_{}.txt'.format(hdu[0].header['OBJECT'], hdu[ext].header['SLITNAME'].strip(), img.split('.')[0][-2:])
     write_ascii(outfile, flux_spec, clobber=True)
 
     pl.plot(ap[0].wave, np.convolve(ap[0].ldata/(y2-y1) - sk[0].ldata/(sy2-sy1), np.ones(5), mode='same'))
