@@ -23,7 +23,7 @@ from specslit import specslit
 from specidentify import specidentify
 from specrectify import specrectify
 
-def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss', guessfile='', rstep=100, automethod='Matchlines'):
+def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss', guessfile='', rstep=100, automethod='Matchlines', preprocess=False):
 
     #set up the files
     infiles=','.join(['%s' % x for x in infile_list])
@@ -35,6 +35,8 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss
 
     #create the observation log
     obs_dict=obslog(infile_list)
+
+    #check the value of dy
 
 
     #apply the mask to the data sets
@@ -55,7 +57,7 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss
                specidentify('a'+arcimage, lampfile, dbfile, guesstype=guesstype,
                   guessfile=guessfile, automethod=automethod,  function='legendre',  order=3,
                   rstep=rstep, rstart='middlerow', mdiff=20, thresh=3, niter=5, smooth=3,
-                  inter=True, clobber=True, logfile=logfile, verbose=True)
+                  inter=True, clobber=True, preprocess=True, logfile=logfile, verbose=True)
 
                #specrectify(arcimage, outimages='', outpref='x', solfile=dbfile, caltype='line',
                #    function='legendre',  order=3, inttype='interp', w1=None, w2=None, dw=None, nw=None,
