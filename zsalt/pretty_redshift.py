@@ -145,7 +145,7 @@ if __name__=='__main__':
      cc.set_title('X-corr Function')
 
    pl.savefig(spname+'.png')
-   pl.show()
+   #pl.show()
    
    
     
