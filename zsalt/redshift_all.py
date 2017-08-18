@@ -1,4 +1,4 @@
-import sys, os, string
+import sys, os, string, argparse
 import pyfits
 import numpy as np
 from PySpectrograph import Spectrum
@@ -10,18 +10,29 @@ import pylab as pl
 
 
 if __name__=='__main__':
- 
-   if sys.argv[1].count('fits'):
-      hdu=pyfits.open(sys.argv[1])
+
+   parser = argparse.ArgumentParser(description='Match redshift to template')
+   parser.add_argument('spectra', help='Spectra to measure redshift')
+   parser.add_argument('-n', dest='noplot', default=True, action='store_false',
+                    help='do not plot the data')
+   parser.add_argument('--z1', dest='z1', default=0.0001, help='default lower redshift', type=float)
+   parser.add_argument('--z2', dest='z2', default=1.2001, help='default lower redshift', type=float)
+
+   args = parser.parse_args()
+
+   infile = args.spectra
+
+   if infile.count('fits'):
+      hdu=pyfits.open(infile)
       spec=loadiraf(hdu)
    else:
-      spec=loadtext(sys.argv[1])
+      spec=loadtext(infile)
  
    dirpath = os.path.dirname(__file__)
  
    best_cc = 0
-   z1 = 0.0
-   z2 = 1.2
+   z1 = args.z1
+   z2 = args.z2
    for i in range(23, 33):
        template_name = 'spDR2-0{}.fit'.format(string.zfill(i, 2))
        thdu=pyfits.open(dirpath+'/template/'+template_name)
@@ -46,16 +57,17 @@ if __name__=='__main__':
    template_name = 'spDR2-0{}.fit'.format(string.zfill(i, 2))
    thdu=pyfits.open(dirpath+'/template/'+template_name)
    template=loadsdss(thdu)
-   print best_z
-   pl.figure()
-   pl.plot(z_arr, cc_arr)
-   pl.figure()
-   cflux=np.convolve(spec.flux, np.ones(10), mode='same')
-   pl.plot(spec.wavelength, cflux)
-   nflux=np.interp(spec.wavelength, (1+z)*template.wavelength, template.flux)
-   #pl.plot((1+z)*template.wavelength, template.flux*spec.flux.mean()/template.flux.mean())
-   pl.plot(spec.wavelength, nflux*cflux.mean()/nflux.mean())
-   pl.show()
+   print best_i, best_z, best_arr.max()
+   if args.noplot: 
+      pl.figure()
+      pl.plot(z_arr, cc_arr)
+      pl.figure()
+      cflux=np.convolve(spec.flux, np.ones(10), mode='same')
+      pl.plot(spec.wavelength, cflux)
+      nflux=np.interp(spec.wavelength, (1+z)*template.wavelength, template.flux)
+      #pl.plot((1+z)*template.wavelength, template.flux*spec.flux.mean()/template.flux.mean())
+      pl.plot(spec.wavelength, nflux*cflux.mean()/nflux.mean())
+      pl.show()
 
    
    

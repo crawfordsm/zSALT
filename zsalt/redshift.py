@@ -52,7 +52,6 @@ def loadiraf(hdu):
 
 def loadsdss(hdu):
    farr=hdu[0].data[0]
-   print len(farr)
    xarr=np.arange(len(farr))
    warr=10**(hdu[0].header['CRVAL1']+hdu[0].header['CD1_1']*(xarr+1))
    spec=Spectrum.Spectrum(warr, farr, stype='continuum')
@@ -66,13 +65,12 @@ if __name__=='__main__':
    else:
       spec=loadtext(sys.argv[1])
  
-
+ 
    thdu=pyfits.open(sys.argv[2])
    template=loadsdss(thdu)
 
 
-   #z_arr, cc_arr=xcor_redshift(spec, template, z1=0.0, z2=5.5, zstep=0.01)
-   z_arr, cc_arr=xcor_redshift(spec, template, z1=0.0, z2=0.8, zstep=0.0001)
+   z_arr, cc_arr=xcor_redshift(spec, template, z1=0.0001, z2=1.2, zstep=0.0001)
    z=z_arr[cc_arr.argmax()]
    print z
    #z_arr, cc_arr=xcor_redshift(spec, template, z1=z-0.05, z2=z+0.05, zstep=0.0001)
