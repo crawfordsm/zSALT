@@ -1,5 +1,5 @@
 import os, sys
-import pyfits
+from astropy.io import fits
 import numpy as np
 from PySpectrograph import Spectrum
 from PySpectrograph.Utilities.fit import interfit
@@ -52,7 +52,6 @@ def loadiraf(hdu):
 
 def loadsdss(hdu):
    farr=hdu[0].data[0]
-   print len(farr)
    xarr=np.arange(len(farr))
    warr=10**(hdu[0].header['CRVAL1']+hdu[0].header['CD1_1']*(xarr+1))
    spec=Spectrum.Spectrum(warr, farr, stype='continuum')
@@ -67,28 +66,31 @@ def readlinelist(infile):
         line_name.append(l[1])
     return line_wave, line_name
 
-if __name__=='__main__':
- 
-   if sys.argv[1].count('fits'):
-      hdu=pyfits.open(sys.argv[1])
+
+
+def pretty_redshift(objfile, template, zc, spname, show):
+
+   if objfile.count('fits'):
+      hdu=fits.open(objfile)
       spec=loadiraf(hdu)
+      outfile = objfile.replace('fits', 'png')
    else:
-      spec=loadtext(sys.argv[1])
+      spec=loadtext(objfile)
+      outfile = objfile.replace('txt', 'png')
  
 
-   thdu=pyfits.open(sys.argv[2])
-   zc=float(sys.argv[3])
+   thdu=fits.open(template)
    template=loadsdss(thdu)
+
+   zc=float(zc)
    z1=max(0,zc-0.15)
    z2=max(0,zc+0.15)
 
    z_arr, cc_arr=xcor_redshift(spec, template, z1=z1, z2=z2, zstep=0.0001)
    z=z_arr[cc_arr.argmax()]
    z = zc
-   print z
    #z_arr, cc_arr=xcor_redshift(spec, template, z1=z-0.05, z2=z+0.05, zstep=0.0001)
    #z=z_arr[cc_arr.argmax()]
-   #print z
    pl.figure()
    sp=pl.axes([0.15,0.15,0.8,0.8])
    cflux=np.convolve(spec.flux, np.ones(10), mode='same')
@@ -106,11 +108,9 @@ if __name__=='__main__':
    sp.plot(spec.wavelength, nflux*ratio, color='#FF0000')
    #sp.plot(spec.wavelength, np.polyval(tcoef, spec.wavelength))
    #pl.plot((1+z)*template.wavelength, template.flux*spec.flux.mean()/template.flux.mean())
-   spname=sys.argv[1].split('_')[0]
    #sp.set_ylim([0,2000])
    x1,x2=sp.get_xlim()
    y1,y2=sp.get_ylim()
-   print y1,y2, x1,x2
    line_wave, line_name=readlinelist(os.path.dirname(__file__)+'/sdss.linelist')
    dx=10
    for w,n in zip(line_wave, line_name):
@@ -122,7 +122,6 @@ if __name__=='__main__':
        #   dx+=100
        #else:
        #   dx=100
-   spname=sys.argv[4]
    sp.text(x1+0.1*(x2-x1),0.8*y2,spname, fontsize=24)
    sp.text(x1+0.1*(x2-x1),0.70*y2,'z=%5.4f' % zc, fontsize=24)
    sp.set_ylabel('Counts')
@@ -138,14 +137,25 @@ if __name__=='__main__':
      cc=pl.axes([sy1, sy2,0.2,0.2])
      cc.plot(z_arr, cc_arr, color='#777777')
      xticks=np.arange(100*z1,100*z2+1,10, dtype=int)/100.0
-     print xticks
      cc.set_xticks(xticks)
      cc.set_yticklabels([])
      cc.set_xlabel('z')
      cc.set_title('X-corr Function')
 
-   pl.savefig(spname+'.png')
-   #pl.show()
+   pl.savefig(outfile)
+   if show: pl.show()
    
    
     
+if __name__=='__main__':
+
+   import argparse
+   parser = argparse.ArgumentParser(description='Pretty redshift plot')
+   parser.add_argument('objfile', help='Extracted spectra')
+   parser.add_argument('template', help='template')
+   parser.add_argument('zc', help='Redshift')
+   parser.add_argument('name', help='Name')
+   parser.add_argument('-n', dest='plot', default=True, action='store_false',  help='Do not plot') 
+   args = parser.parse_args()
+  
+   pretty_redshift(args.objfile, args.template, args.zc, args.name, args.plot)
