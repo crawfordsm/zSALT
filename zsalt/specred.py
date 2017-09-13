@@ -23,7 +23,7 @@ from specrectify import specrectify
 from specarcstraighten import specarcstraighten
 
 
-def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod='Matchlines'):
+def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod='Matchlines', preprocess=False):
 
     #set up the files
     infiles=','.join(['%s' % x for x in infile_list])
@@ -68,7 +68,7 @@ def specred(infile_list, propcode=None, inter=True, guessfile = None, automethod
                specidentify(arcimage, lampfile, dbfile, guesstype=guesstype,
                   guessfile=guessfile, automethod=automethod,  function='legendre',  order=3,
                   rstep=100, rstart='middlerow', mdiff=20, thresh=5, niter=5, smooth=3,
-                  inter=inter, clobber=True, logfile=logfile, verbose=True)
+                  inter=inter, clobber=True,  preprocess=preprocess, logfile=logfile, verbose=True)
  
                #apply the final rectification
                specrectify(arcimage, outimages='', outpref='x', solfile=dbfile, caltype='line',
