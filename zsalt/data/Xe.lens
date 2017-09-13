@@ -1,0 +1,28 @@
+# Xe I Pen-Ray Spectrum
+# all obs intensities at 100 sec exposure
+# Lines for the SALT Lens set up
+# Obs Obs Comment
+# Wave Intensity
+4500.978     154
+4582.747     42
+4624.276     517
+4671.226     1068
+4734.152     342
+4807.019     256
+4843.293     136
+4972.7100    40    acs: add
+5028.279     50    acs: increase from 36
+5292.2200    60    acs: add
+5339.3800    40    acs: add
+5419.1500    70    acs: add
+5695.7500    30    acs: add
+5823.8900    100   acs: add
+6318.062     108
+6595.561     34
+6728.008     124
+6827.315     131
+6882.155     325 blend
+6925.530     37
+6976.182     61
+7119.598     500
+7472.010     91

@@ -1,0 +1,19 @@
+#WS: Wavelength solution for image mfxgbpP201607070055.fits
+#The following parameters were used in determining the solution:
+#name=mfxgbpP201607070055.fits
+#time-obs=2016-07-08 00:07:06.671
+#instrument=RSS
+#grating=PG0900
+#graang=15.875
+#gratilt=15.875
+#arang=31.646565
+#artilt=31.75
+#filter=PC03850
+#Function=legendre
+#Order=3
+#domain=0,3171
+#Starting Data
+251.50 6.031379e+03 1.528376e+03 -2.349290e+01 -3.193953e+00
+513.50 6.039891e+03 1.529133e+03 -2.355177e+01 -3.180050e+00
+913.50 6.026803e+03 1.527601e+03 -2.364973e+01 -3.328426e+00
+
