@@ -50,7 +50,7 @@ def mosred(infile_list, slitmask,propcode=None, dy=0, inter=True, guesstype='rss
                lamp=obs_dict['LAMPID'][i].strip().replace(' ', '')
                arcimage='s'+os.path.basename(infile_list[i])
                if lamp == 'NONE': lamp='CuAr'
-               lampfile=iraf.osfn("../../%s.salt" % lamp)
+               lampfile=iraf.osfn("pysalt$data/linelists/%s.salt" % lamp)
 
                specselfid(arcimage, '', 'a', arcimage, 'middlerow', 3, clobber=True, logfile=logfile, verbose=True)
 
