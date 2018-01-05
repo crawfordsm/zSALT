@@ -74,7 +74,7 @@ if __name__=='__main__':
    z=z_arr[cc_arr.argmax()]
    #z_arr, cc_arr=xcor_redshift(spec, template, z1=z-0.05, z2=z+0.05, zstep=0.0001)
    #z=z_arr[cc_arr.argmax()]
-   #print z
+   print z
    pl.figure()
    pl.plot(z_arr, cc_arr)
    pl.figure()

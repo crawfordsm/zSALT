@@ -105,7 +105,7 @@ for spec in  spec_list:
     name = spec.split('_')[0]
     xp = spec.split('_')[2].strip('.txt')
     pretty_redshift(spec, template, z, name, False)
-    out_str = '{} {} {} {} {}'.format(name, obsdate, xp, z, t)
+    out_str = '{} {} {} {} {}\n'.format(name, obsdate, xp, z, t)
     fout.write(out_str)
     print(out_str)
 fout.close()   

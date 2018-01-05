@@ -34,7 +34,7 @@ if args.basic_red: imred(infile_list, './', bpmfile, cleanup=True)
 #spectroscopic reductions
 propid=None
 infile_list = glob.glob('m*fits')
-specred(infile_list, propid, inter=True, guessfile=args.guess_file, preprocess=args.preprocess)
+specred(infile_list, propid, inter=not args.auto, guessfile=args.guess_file, preprocess=args.preprocess)
 
 #extract the data
 

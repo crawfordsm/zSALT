@@ -15,7 +15,11 @@ def mos_extract_all(img):
     for i in range(1, len(hdu)):
         if hdu[i].name == 'SCI':
            print(i)
-           flux, sky = mt.extract_fit_flux(hdu[i].data, padding=1)
+           try:
+              flux, sky = mt.extract_fit_flux(hdu[i].data, padding=1)
+           except:
+              continue
+                
 
            xarr = np.arange(len(flux))
            # convert using the WCS information
