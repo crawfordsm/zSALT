@@ -9,7 +9,7 @@ from iraf import pysalt
 import mostools as mt
 
 
-def source_extract(img, yc, dy, ext=1, trim=0):
+def source_extract(img, yc, dy, ext=1, trim=0, clean=True):
     hdu = fits.open(img)
     
     data = hdu[ext].data[yc-dy:yc+dy,:]
@@ -33,8 +33,18 @@ def source_extract(img, yc, dy, ext=1, trim=0):
     warr = w0 + dw * xarr
 
     #clean up spectra
-    err = abs(flux)**0.5
+    if clean:
+       smask = (warr > 5570) * (warr < 5585)
+       warr = warr[smask] 
+       flux = flux[smask]
+   
+       smask = (warr > 6295) * (warr < 6310)
+       warr = warr[smask] 
+       flux = flux[smask]
  
+    # set up error
+    err = abs(flux)**0.5
+
     #write out spectra
     obsdate = img.split('P')[-1][0:8]
     outfile = '{}_{}_{}.txt'.format(hdu[0].header['OBJECT'], obsdate, yc)
