@@ -35,12 +35,12 @@ def source_extract(img, yc, dy, ext=1, trim=0, clean=True):
     #clean up spectra
     if clean:
        smask = (warr > 5570) * (warr < 5585)
-       warr = warr[smask] 
-       flux = flux[smask]
+       warr = warr[~smask] 
+       flux = flux[~smask]
    
        smask = (warr > 6295) * (warr < 6310)
-       warr = warr[smask] 
-       flux = flux[smask]
+       warr = warr[~smask] 
+       flux = flux[~smask]
  
     # set up error
     err = abs(flux)**0.5
