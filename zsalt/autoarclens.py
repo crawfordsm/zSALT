@@ -50,8 +50,8 @@ def auto_arc_lens(arc_image, dbfile='wav.db', ndstep=20, logfile='salt.log'):
  
         # start the pre processing
         dcoef = ws.coef * 0.0
-        dcoef[0] = 0.5 * 6 *  ndstep
-        dcoef[1] = 0.1 * ws.coef[1]
+        dcoef[0] = 0.05 * ndstep
+        dcoef[1] = 0.01 * ws.coef[1]
         ws = st.findxcor(xarr, farr, swarr, sfarr, ws,
                          dcoef=dcoef, ndstep=ndstep, best=False, inttype='interp')
         xp, wp = st.crosslinematch(xarr, farr, slines, sfluxes, ws,
